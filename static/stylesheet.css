@@ -1,0 +1,8 @@
+.card {
+    background-image: url("deck2.png");
+
+    width: 97px; /* Icon width */
+    height: 54px; /* Icon height */
+
+    background-position: 0px 0px; /* Icon background position in sprite */
+}

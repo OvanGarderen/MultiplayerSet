@@ -14,6 +14,27 @@ app.secret_key = os.getenv("SECRET_KEY", "")
 
 ROOMS = {}
 
+# debug game
+testuser = User('testuser','test')
+testgame = Game('__testgame', 1)
+testgame.add_player(testuser)
+
+@app.route('/testgame')
+def testcard():
+    return render_template('testgame.html')
+
+@socketio.on('testdraw')
+def testdraw():
+    print("drew a card")
+    
+    testgame.board = []
+    if not testgame.draw():
+        testgame.generate_deck()    
+
+    emit('cards',testgame.to_json());
+
+# real logic
+
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -46,7 +67,7 @@ def on_create(data):
     # broadcast gamestate over socket
     join_room(room)
     emit('update_rooms', [room.to_json() for room in ROOMS.values()])
-    emit('join_room', {'room': room})
+    emit('join_room', room)
 
 @socketio.on('want_update_rooms')
 def want_update_rooms(data):

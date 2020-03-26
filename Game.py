@@ -66,7 +66,7 @@ class Game(object):
                 return False
         
         # check if there is a set yet, otherwise try to draw 3 cards at most twice
-        if not check_set_exists():
+        if not self.check_set_exists():
             for i in range(3):
                 if len(self.deck) > 0:
                     self.board.append(self.deck.pop())
@@ -74,7 +74,7 @@ class Game(object):
                     return False
                 
             # check if that fixed the board, there is always a set after redrawing twice
-            if not check_set_exists():
+            if not self.check_set_exists():
                 for i in range(3):
                     if len(self.deck) > 0:
                         self.board.append(self.deck.pop())
@@ -141,7 +141,7 @@ class Card(object):
         """Initialise a card using a quadruple of values 0,1,2"""
         self.attr = (colour, shading, number, shape)
 
-    def to_json():
+    def to_json(self):
         return {
             "colour" : Card.COLOURS[self.attr[0]],
             "shading" : Card.SHADINGS[self.attr[1]],
@@ -163,7 +163,7 @@ class Card(object):
         
         # for each attribute check if it is valid
         for i in [0,1,2,3]:
-            if attr_same(a.attr[i],b.attr[i],c.attr[i]) or attr_diff(a.attr[i],b.attr[i],c.attr[i]):
+            if Card.attr_same(a.attr[i],b.attr[i],c.attr[i]) or Card.attr_diff(a.attr[i],b.attr[i],c.attr[i]):
                 continue
             correct = False
         return correct

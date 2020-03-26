@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Set Multiplayer Server</title>
+</head>
+<body>
+  <p>Some sample code to make sure Flask-SocketIO works...</p>
+  
+  <table>
+    <tr>
+      <td>
+	<input type="text" id="roomname" name="Room"><br><br>
+      </td>
+      <td>
+	<button onclick="createGame()">Create Game</button>
+      </td>
+  </table>
+  <br>
+
+  <table id="room-table">
+  </table>
+  
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
+
+  <script type="text/javascript" charset="utf-8">
+    var socket = io.connect('http://' + document.domain + ':' + location.port);
+
+    // verify our websocket connection is established
+    socket.on('connect', function() {
+        console.log('Websocket connected!');
+
+	socket.emit('want_update_rooms',{"max" : 10})
+    });
+
+    // message handler for the 'join_room' channel
+    socket.on('join_room', function(msg) {
+        console.log(msg);
+    });
+
+    socket.on('update_rooms', function(rooms) {
+	
+	var rows = '<tr><th>Room</th><th>Max. Players</th><th>Players</th> </tr>';
+
+	for(i = 0; i<rooms.length; i++) {
+	    var row = '<tr>';
+
+	    var players = '';
+	    for(j=0; j<rooms[i]["players"].length; j++) {
+		players += ' ' + rooms[i]["players"][j]["username"];
+	    }
+		
+	    row += "<td>" + rooms[i]["name"] + "</td>";
+	    row += "<td>" + rooms[i]["size"] + "</td>";
+	    row += "<td>" + players + "</td>";
+	    rows += row + '</tr>';
+	}
+	
+	$('#room-table').html(rows);
+    })
+
+    // createGame onclick - emit a message on the 'create' channel to 
+    // create a new game with default parameters
+    function createGame() {
+	console.log('Creating game...');
+	
+	socket.emit('create', {username: 'noone', pwhash: '1203123', name: $('#roomname').val(), size: 'normal'});
+    }
+  </script>
+</body>
+</html>

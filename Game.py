@@ -25,6 +25,7 @@ class Game(object):
 
     def to_json(self):
         return {
+            "id" : self.game_id,
             "name" : self.name,
             "size" : self.size,
             "players" : [player.to_json() for player in self.players.values()],
@@ -43,7 +44,11 @@ class Game(object):
         
     def reward(self,user):
         self.players[user.uid].sets += 1
-        
+
+    def unblock_players(self):
+        for player in self.players.values():
+            player.blocked = False;
+       
     def generate_deck(self):
         self.deck = []
         
@@ -66,7 +71,7 @@ class Game(object):
                 return False
         
         # check if there is a set yet, otherwise try to draw 3 cards at most twice
-        if not self.check_set_exists():
+        if self.find_set() is None:
             for i in range(3):
                 if len(self.deck) > 0:
                     self.board.append(self.deck.pop())
@@ -74,7 +79,7 @@ class Game(object):
                     return False
                 
             # check if that fixed the board, there is always a set after redrawing twice
-            if not self.check_set_exists():
+            if self.find_set() is None:
                 for i in range(3):
                     if len(self.deck) > 0:
                         self.board.append(self.deck.pop())
@@ -83,16 +88,19 @@ class Game(object):
                         
         return True
 
-    def check_set_exists(self):
+    def find_set(self):
         """just brute forcing, not sure how to do much better without getting complicated"""
         for i in range(len(self.board)-2):
             for j in range(1,len(self.board)-1):
                 for k in range(2,len(self.board)):
+                    if i == j or j == k or k == i:
+                        continue
+
                     if Card.check_set(self.board[i],
                                       self.board[j],
                                       self.board[k]):
-                        return True
-        return False
+                        return [i, j, k]
+        return None
 
     def check_set(self,selection):
         """Given a list of 3 indices, check if these indices are a set"""
@@ -122,7 +130,7 @@ class Game(object):
 
 
         # remove all at once using multi-index
-        del self.board[selection[0],selection[1],selection[2]]
+        self.board = [card for i,card in enumerate(self.board) if i != selection[0] and i != selection[1] and i != selection[2]];
 
     @classmethod
     def generate_room_id(cls):
@@ -159,11 +167,8 @@ class Card(object):
     
     @classmethod
     def check_set(cls,a, b, c):
-        correct = True
-        
         # for each attribute check if it is valid
         for i in [0,1,2,3]:
-            if Card.attr_same(a.attr[i],b.attr[i],c.attr[i]) or Card.attr_diff(a.attr[i],b.attr[i],c.attr[i]):
-                continue
-            correct = False
-        return correct
+            if not Card.attr_same(a.attr[i],b.attr[i],c.attr[i]) and not Card.attr_diff(a.attr[i],b.attr[i],c.attr[i]):
+                return False
+        return True

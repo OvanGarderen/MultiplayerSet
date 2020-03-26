@@ -18,6 +18,7 @@ ROOMS = {}
 testuser = User('testuser','test')
 testgame = Game('__testgame', 1)
 testgame.add_player(testuser)
+ROOMS[testgame.game_id] = testgame;
 
 @app.route('/testgame')
 def testcard():
@@ -30,11 +31,18 @@ def testdraw():
     testgame.board = []
     if not testgame.draw():
         testgame.generate_deck()    
+        
+    theset = testgame.find_set();
+        
+    emit('game_draw_update',{'game': testgame.to_json(), 'set' : theset});
 
-    emit('cards',testgame.to_json());
+@socketio.on('request_game_update')
+def request_room_update():
+    join_room(testgame.game_id)
+    emit('game_update', testgame.to_json())
+
 
 # real logic
-
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -70,7 +78,7 @@ def on_create(data):
     emit('join_room', room)
 
 @socketio.on('want_update_rooms')
-def want_update_rooms(data):
+def want_update_rooms():
     emit('update_rooms', [room.to_json() for room in ROOMS.values()])
 
 @socketio.on('join')
@@ -85,7 +93,7 @@ def on_join(data):
 
         # rebroadcast game object
         join_room(room)
-        send(ROOMS[room].to_json(), room=room)
+        emit('game_update', ROOMS[room].to_json(), room=room)
     else:
         emit('error', {'error': 'Unable to join room. Room does not exist.'})
 
@@ -105,15 +113,17 @@ def on_leave(data):
 
     # rebroadcast game object
     leave_room(room)
-    send(ROOMS[room].to_json(), room=room)
+    emit('game_update', ROOMS[room].to_json(), room=room)
 
 @socketio.on('set_select')
 def set_select(data):
-
     user = User(data['username'],data['pwhash'])
 
     room = data['room']
     selection = data['selection']
+
+    print("testetstst");
+    print(room, ROOMS.keys());
 
     # prevent errors
     if not room in ROOMS.keys():
@@ -133,15 +143,17 @@ def set_select(data):
         game.remove_set(selection)
         game.draw()
 
+        print("Valid!");
+
         # rebroadcast game object
-        send(game.to_json(), room=room)
+        emit('game_draw_update', {'game' : game.to_json(), 'set' : game.find_set()} , room=room)
     else:
         
         # disable player until next turn
         game.punish(user)
 
         # rebroadcast game object
-        send(game.to_json(), room=room)
-
+        emit('game_update', game.to_json(), room=room)
+        
 if __name__ == '__main__':
     socketio.run(app, host='0.0.0.0', debug=True)

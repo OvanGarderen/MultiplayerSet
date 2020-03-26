@@ -18,19 +18,33 @@
   <script type="text/javascript" charset="utf-8">
     var socket = io.connect('http://' + document.domain + ':' + location.port);
 
+    var marked_cards = [];
+
+    var room_state = null;
+
     // verify our websocket connection is established
     socket.on('connect', function() {
         console.log('Websocket connected!');
+	
+	socket.emit('request_game_update')
     });
 
-    socket.on('cards', function(data) {
-	cards = data['board'];
-	console.log(cards);
+    socket.on('game_update', function(data) {
+	room_state = data;	
+    });
 
-	width = cards.length/3;
-	console.log(width);
+    socket.on('game_draw_update', function(data) {
+	console.log('new cards drawn');
+
+	room_state = data['game'];
+	marked_cards = [];
+
+	var cards = data['game']['board'];
+	var set = data['set'];
+
+	var width = cards.length/3;
 	
-	table = "";
+	var table = "";
 	for (i = 0; i < 3; i++) {
 	    table += '<tr>';
 	    for (j = 0; j < width; j++) table += '<td class="card"></td>';
@@ -38,34 +52,72 @@
 	}
 	$("#cards").html(table);
 	
-	$("#cards").find('td').each(function (n, el){setCard(cards[n],$(el))});
+	$("#cards").find('td').each(function (n, el){
+	    $(el).click(function() {
+		if ($(el).hasClass("marked")) {
+		    $(el).removeClass("marked");
+		    toggleCard(n);
+		} else {
+		    $(el).addClass("marked");
+		    toggleCard(n);
+		}
+	    });
+	    
+	    if (!!set && (n == set[0] || n == set[1] || n == set[2])) {
+		setCard(cards[n],$(el),1);
+		marked_cards.push(n);
+	    } else {
+		setCard(cards[n],$(el),0);
+	    }
+	});
     });
 
-    function setCard(card,el) {
-	console.log('setting',card);
-	pos_h = 0;
-	pos_v = 0;
+    function setCard(card,el,marking) {
+	if (marking)
+	    el.addClass("marked");
 
-	offset_h = 97;
-	offset_v = 54; 
-
+	var pos_h = 0;
+	var pos_v = 0;
+	
+	var offset_h = 194;
+	var offset_v = 108; 
+	
 	pos_v -=  (card['colour'] == 'green') ? (3 * offset_v) : 
 	    (card['colour'] == 'blue') ? (6 * offset_v) : 0;
-
+	
 	pos_v -=  (card['shading'] == 'SHADED') ? offset_v : 
 	    (card['shading'] == 'FULL') ? 2 * offset_v : 0;
-
+	
 	pos_h -=  (card['number'] == '2') ? offset_h : 
 	    (card['number'] == '3') ? 2 * offset_h : 0;
-
+	
 	pos_h -=  (card['shape'] == 'OVAL') ? 3 * offset_h : 
 	    (card['shape'] == 'FLEXYBOY') ? 6 * offset_h : 0;
 	
 	el.css("background-position", pos_h + "px " + pos_v + "px");
     }
+    
+    function toggleCard(n) {
+	if (marked_cards.indexOf(n) < 0) {
+	    marked_cards.push(n);
 
+	    if (marked_cards.length >= 3) {
+		console.log('set selected'); 
+		socket.emit('set_select', {
+		    'room' : room_state['id'], 
+		    'username' : 'testuser', 
+		    'pwhash' : 'test',
+		    'selection' : marked_cards
+		});
+	    }	    
+	} else {
+	    marked_cards = marked_cards.filter(function(value,index,arr){return value != n});
+	}
+
+	console.log("cards: " + marked_cards);
+    }
+    
     function Draw() {
-	console.log('drawing');
 	socket.emit('testdraw');
     }
   </script>

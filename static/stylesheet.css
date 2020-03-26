@@ -1,8 +1,23 @@
 .card {
     background-image: url("deck2.png");
 
-    width: 97px; /* Icon width */
-    height: 54px; /* Icon height */
+    width: 194px; 
+    height: 108px;
+    background-position: 0px 0px; 
 
-    background-position: 0px 0px; /* Icon background position in sprite */
+    /* scaled up twice */
+    background-size: 1746px 972px;
 }
+
+.card:hover {
+    filter: invert(10%);
+}
+
+.card.marked {
+    filter: invert(30%);
+}
+
+.card.marked:hover {
+    filter: invert(20%);
+}
+

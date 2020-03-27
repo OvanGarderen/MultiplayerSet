@@ -3,15 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <link rel="stylesheet" href="static/stylesheet.css">
+  <link href="https://fonts.googleapis.com/css?family=Alegreya&display=swap" rel="stylesheet">
   <title>Set Multiplayer Server</title>
 </head>
 <body>
-  <p>Testing the cards</p>
+  <div class="middle-wrapper">
+    <div class="gamearea">        
+      <h1 class="internal-box">Multiplayer Set</h1>
 
-  <table id="cards"></table>
+      <div id="players"></div>
 
-  <button onclick="Draw()">Draw</button>
- 
+      <div class="playarea">
+	<table id="cards"></table>
+      </div>
+      
+      <div id="infobox" class="internal-box"> </div>
+      <button onclick="Draw()" class="internal-box">Reset</button>
+    </div>
+ </div>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
 
@@ -30,29 +39,38 @@
     });
 
     socket.on('game_update', function(data) {
-	room_state = data;	
+	room_state = data;
+	update_cards(room_state['board']);
+
+	$("#playersets").html(data['players'][0]['sets']);
+
+	console.log(data);
+
+	update_cards(data['board']);
+	update_player_info(data['players'])
     });
 
-    socket.on('game_draw_update', function(data) {
-	console.log('new cards drawn');
+    socket.on('message', function(message) {
+	$("#infobox").prepend(message + "</br>");
+    });
 
-	room_state = data['game'];
-	marked_cards = [];
+    socket.on('game_over', function(data) {
+	update_cards(data['board']);
+    });
 
-	var cards = data['game']['board'];
-	var set = data['set'];
-
+   
+    function update_cards(cards) {
 	var width = cards.length/3;
 	
 	var table = "";
 	for (i = 0; i < 3; i++) {
 	    table += '<tr>';
-	    for (j = 0; j < width; j++) table += '<td class="card"></td>';
+	    for (j = 0; j < width; j++) table += '<td><div class="card"></div></td>';
 	    table += '</tr>';
 	}
 	$("#cards").html(table);
 	
-	$("#cards").find('td').each(function (n, el){
+	$("#cards").find('div').each(function (n, el){
 	    $(el).click(function() {
 		if ($(el).hasClass("marked")) {
 		    $(el).removeClass("marked");
@@ -63,21 +81,23 @@
 		}
 	    });
 	    
-	    if (!!set && (n == set[0] || n == set[1] || n == set[2])) {
-		setCard(cards[n],$(el),1);
-		marked_cards.push(n);
-	    } else {
-		setCard(cards[n],$(el),0);
-	    }
+	    setCard(cards[n],$(el));
 	});
-    });
+    }
 
-    function setCard(card,el,marking) {
-	if (marking)
-	    el.addClass("marked");
+    function update_player_info(players) {
+	html = "";
 
-	var pos_h = 0;
-	var pos_v = 0;
+	for (var i=0; i < players.length; i++) 
+	    html += "<div class='playerinfo internal-box'><table><tr><td>" + players[i]['username'] 
+		+ "<td></tr><tr><td>Sets: " + players[i]['sets'] + "<td></tr></table></div>";
+
+	$("#players").html(html);	
+    }
+
+    function setCard(card,el) {
+	var pos_h = -2;
+	var pos_v = -2;
 	
 	var offset_h = 194;
 	var offset_v = 108; 
@@ -102,19 +122,18 @@
 	    marked_cards.push(n);
 
 	    if (marked_cards.length >= 3) {
-		console.log('set selected'); 
 		socket.emit('set_select', {
 		    'room' : room_state['id'], 
 		    'username' : 'testuser', 
 		    'pwhash' : 'test',
 		    'selection' : marked_cards
 		});
+
+		marked_cards = [];
 	    }	    
 	} else {
 	    marked_cards = marked_cards.filter(function(value,index,arr){return value != n});
 	}
-
-	console.log("cards: " + marked_cards);
     }
     
     function Draw() {

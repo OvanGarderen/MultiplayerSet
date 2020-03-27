@@ -29,17 +29,15 @@ def testdraw():
     print("drew a card")
     
     testgame.board = []
-    if not testgame.draw():
-        testgame.generate_deck()    
-        
-    theset = testgame.find_set();
-        
-    emit('game_draw_update',{'game': testgame.to_json(), 'set' : theset});
+    testgame.generate_deck()
+    testgame.draw()
+                
+    emit('game_update', testgame.to_json(), room = testgame.game_id);
 
 @socketio.on('request_game_update')
 def request_room_update():
     join_room(testgame.game_id)
-    emit('game_update', testgame.to_json())
+    emit('game_update', testgame.to_json(), room = testgame.game_id)
 
 
 # real logic
@@ -135,20 +133,22 @@ def set_select(data):
     # check if the player selected a valid set
     if game.check_set(selection):
 
+        send(user.username + ' got a set!', room=room)
+
         # update points
         game.reward(user)
         game.unblock_players()
 
         # update gameboard
         game.remove_set(selection)
-        game.draw()
-
-        print("Valid!");
-
-        # rebroadcast game object
-        emit('game_draw_update', {'game' : game.to_json(), 'set' : game.find_set()} , room=room)
-    else:
         
+        if not game.draw():
+            send('Game over!', room=room)
+
+        emit('game_update', game.to_json(), room=room)
+    else:
+        send(user.username + ' got a false set', room=room)
+
         # disable player until next turn
         game.punish(user)
 

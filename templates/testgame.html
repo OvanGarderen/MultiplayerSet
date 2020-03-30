@@ -1,144 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <link rel="stylesheet" href="static/stylesheet.css">
-  <link href="https://fonts.googleapis.com/css?family=Alegreya&display=swap" rel="stylesheet">
-  <title>Set Multiplayer Server</title>
-</head>
-<body>
-  <div class="middle-wrapper">
-    <div class="gamearea">        
-      <h1 class="internal-box">Multiplayer Set</h1>
+{% extends "base.html" %}
 
-      <div id="players"></div>
+{% block scripts %}
+<script type="text/javascript" src="/static/js/game.js"></script>
+{% endblock %}
 
-      <div class="playarea">
-	<table id="cards"></table>
-      </div>
-      
-      <div id="infobox" class="internal-box"> </div>
-      <button onclick="Draw()" class="internal-box">Reset</button>
-    </div>
- </div>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-  <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
+{% block content %}
+  <div id="players"></div>  
+  <div class="playarea">
+    <table id="cards"></table>
+  </div>
+  
+  <div id="infobox" class="internal-box"> </div>
+  <button onclick="Draw()" class="internal-box">Reset</button>
+</div>
+{% endblock %}
 
-  <script type="text/javascript" charset="utf-8">
-    var socket = io.connect('http://' + document.domain + ':' + location.port);
-
-    var marked_cards = [];
-
-    var room_state = null;
-
-    // verify our websocket connection is established
-    socket.on('connect', function() {
-        console.log('Websocket connected!');
-	
-	socket.emit('request_game_update')
-    });
-
-    socket.on('game_update', function(data) {
-	room_state = data;
-	update_cards(room_state['board']);
-
-	$("#playersets").html(data['players'][0]['sets']);
-
-	console.log(data);
-
-	update_cards(data['board']);
-	update_player_info(data['players'])
-    });
-
-    socket.on('message', function(message) {
-	$("#infobox").prepend(message + "</br>");
-    });
-
-    socket.on('game_over', function(data) {
-	update_cards(data['board']);
-    });
-
-   
-    function update_cards(cards) {
-	var width = cards.length/3;
-	
-	var table = "";
-	for (i = 0; i < 3; i++) {
-	    table += '<tr>';
-	    for (j = 0; j < width; j++) table += '<td><div class="card"></div></td>';
-	    table += '</tr>';
-	}
-	$("#cards").html(table);
-	
-	$("#cards").find('div').each(function (n, el){
-	    $(el).click(function() {
-		if ($(el).hasClass("marked")) {
-		    $(el).removeClass("marked");
-		    toggleCard(n);
-		} else {
-		    $(el).addClass("marked");
-		    toggleCard(n);
-		}
-	    });
-	    
-	    setCard(cards[n],$(el));
-	});
-    }
-
-    function update_player_info(players) {
-	html = "";
-
-	for (var i=0; i < players.length; i++) 
-	    html += "<div class='playerinfo internal-box'><table><tr><td>" + players[i]['username'] 
-		+ "<td></tr><tr><td>Sets: " + players[i]['sets'] + "<td></tr></table></div>";
-
-	$("#players").html(html);	
-    }
-
-    function setCard(card,el) {
-	var pos_h = -2;
-	var pos_v = -2;
-	
-	var offset_h = 194;
-	var offset_v = 108; 
-	
-	pos_v -=  (card['colour'] == 'green') ? (3 * offset_v) : 
-	    (card['colour'] == 'blue') ? (6 * offset_v) : 0;
-	
-	pos_v -=  (card['shading'] == 'SHADED') ? offset_v : 
-	    (card['shading'] == 'FULL') ? 2 * offset_v : 0;
-	
-	pos_h -=  (card['number'] == '2') ? offset_h : 
-	    (card['number'] == '3') ? 2 * offset_h : 0;
-	
-	pos_h -=  (card['shape'] == 'OVAL') ? 3 * offset_h : 
-	    (card['shape'] == 'FLEXYBOY') ? 6 * offset_h : 0;
-	
-	el.css("background-position", pos_h + "px " + pos_v + "px");
-    }
-    
-    function toggleCard(n) {
-	if (marked_cards.indexOf(n) < 0) {
-	    marked_cards.push(n);
-
-	    if (marked_cards.length >= 3) {
-		socket.emit('set_select', {
-		    'room' : room_state['id'], 
-		    'username' : 'testuser', 
-		    'pwhash' : 'test',
-		    'selection' : marked_cards
-		});
-
-		marked_cards = [];
-	    }	    
-	} else {
-	    marked_cards = marked_cards.filter(function(value,index,arr){return value != n});
-	}
-    }
-    
-    function Draw() {
-	socket.emit('testdraw');
-    }
-  </script>
-</body>
-</html>

@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="internal-box" id="logged">
+  Logged in as 
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  $((function() {
+      $("#logged").append(decodeURIComponent(Cookies.get("username")))
+  })
+</script>
+{% endblock %}
+

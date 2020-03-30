@@ -1,0 +1,371 @@
+.card {
+    /*background-image: url("deck2.png");
+    background-size: 1746px 972px;
+    background-position: 0px 0px; */
+    
+    background-color: white;
+
+    width: 188px; 
+    height: 100px;
+
+    margin: 4px;
+
+    box-shadow: 2px 2px 5px 3px rgb(105,85,85);
+}
+
+.card:hover {
+    filter: invert(10%);
+}
+
+.card.marked {
+    filter: invert(30%);
+}
+
+.card.marked:hover {
+    filter: invert(20%);
+}
+
+/* red squiggles */
+
+.card-single-squiggle-empty-red {
+    background-image: url('cards/squiggle1_red.svg');
+}
+
+.card-single-squiggle-dashed-red {
+    background-image: url('cards/squiggle1_dashed_red.svg');
+}
+
+.card-single-squiggle-full-red {
+    background-image: url('cards/squiggle1_full_red.svg');
+}
+
+.card-double-squiggle-empty-red {
+    background-image: url('cards/squiggle2_red.svg');
+}
+
+.card-double-squiggle-dashed-red {
+    background-image: url('cards/squiggle2_dashed_red.svg');
+}
+
+.card-double-squiggle-full-red {
+    background-image: url('cards/squiggle2_full_red.svg');
+}
+
+.card-triple-squiggle-empty-red {
+    background-image: url('cards/squiggle3_red.svg');
+}
+
+.card-triple-squiggle-dashed-red {
+    background-image: url('cards/squiggle3_dashed_red.svg');
+}
+
+.card-triple-squiggle-full-red {
+    background-image: url('cards/squiggle3_full_red.svg');
+}
+
+/* green squiggles */
+
+.card-single-squiggle-empty-green {
+    background-image: url('cards/squiggle1_green.svg');
+}
+
+.card-single-squiggle-dashed-green {
+    background-image: url('cards/squiggle1_dashed_green.svg');
+}
+
+.card-single-squiggle-full-green {
+    background-image: url('cards/squiggle1_full_green.svg');
+}
+
+.card-double-squiggle-empty-green {
+    background-image: url('cards/squiggle2_green.svg');
+}
+
+.card-double-squiggle-dashed-green {
+    background-image: url('cards/squiggle2_dashed_green.svg');
+}
+
+.card-double-squiggle-full-green {
+    background-image: url('cards/squiggle2_full_green.svg');
+}
+
+.card-triple-squiggle-empty-green {
+    background-image: url('cards/squiggle3_green.svg');
+}
+
+.card-triple-squiggle-dashed-green {
+    background-image: url('cards/squiggle3_dashed_green.svg');
+}
+
+.card-triple-squiggle-full-green {
+    background-image: url('cards/squiggle3_full_green.svg');
+}
+
+/* blue squiggles */
+
+.card-single-squiggle-empty-blue {
+    background-image: url('cards/squiggle1_blue.svg');
+}
+
+.card-single-squiggle-dashed-blue {
+    background-image: url('cards/squiggle1_dashed_blue.svg');
+}
+
+.card-single-squiggle-full-blue {
+    background-image: url('cards/squiggle1_full_blue.svg');
+}
+
+.card-double-squiggle-empty-blue {
+    background-image: url('cards/squiggle2_blue.svg');
+}
+
+.card-double-squiggle-dashed-blue {
+    background-image: url('cards/squiggle2_dashed_blue.svg');
+}
+
+.card-double-squiggle-full-blue {
+    background-image: url('cards/squiggle2_full_blue.svg');
+}
+
+.card-triple-squiggle-empty-blue {
+    background-image: url('cards/squiggle3_blue.svg');
+}
+
+.card-triple-squiggle-dashed-blue {
+    background-image: url('cards/squiggle3_dashed_blue.svg');
+}
+
+.card-triple-squiggle-full-blue {
+    background-image: url('cards/squiggle3_full_blue.svg');
+}
+
+
+
+/* red ovals */
+
+.card-single-oval-empty-red {
+    background-image: url('cards/oval1_red.svg');
+}
+
+.card-single-oval-dashed-red {
+    background-image: url('cards/oval1_dashed_red.svg');
+}
+
+.card-single-oval-full-red {
+    background-image: url('cards/oval1_full_red.svg');
+}
+
+.card-double-oval-empty-red {
+    background-image: url('cards/oval2_red.svg');
+}
+
+.card-double-oval-dashed-red {
+    background-image: url('cards/oval2_dashed_red.svg');
+}
+
+.card-double-oval-full-red {
+    background-image: url('cards/oval2_full_red.svg');
+}
+
+.card-triple-oval-empty-red {
+    background-image: url('cards/oval3_red.svg');
+}
+
+.card-triple-oval-dashed-red {
+    background-image: url('cards/oval3_dashed_red.svg');
+}
+
+.card-triple-oval-full-red {
+    background-image: url('cards/oval3_full_red.svg');
+}
+
+/* green ovals */
+
+.card-single-oval-empty-green {
+    background-image: url('cards/oval1_green.svg');
+}
+
+.card-single-oval-dashed-green {
+    background-image: url('cards/oval1_dashed_green.svg');
+}
+
+.card-single-oval-full-green {
+    background-image: url('cards/oval1_full_green.svg');
+}
+
+.card-double-oval-empty-green {
+    background-image: url('cards/oval2_green.svg');
+}
+
+.card-double-oval-dashed-green {
+    background-image: url('cards/oval2_dashed_green.svg');
+}
+
+.card-double-oval-full-green {
+    background-image: url('cards/oval2_full_green.svg');
+}
+
+.card-triple-oval-empty-green {
+    background-image: url('cards/oval3_green.svg');
+}
+
+.card-triple-oval-dashed-green {
+    background-image: url('cards/oval3_dashed_green.svg');
+}
+
+.card-triple-oval-full-green {
+    background-image: url('cards/oval3_full_green.svg');
+}
+
+/* blue ovals */
+
+.card-single-oval-empty-blue {
+    background-image: url('cards/oval1_blue.svg');
+}
+
+.card-single-oval-dashed-blue {
+    background-image: url('cards/oval1_dashed_blue.svg');
+}
+
+.card-single-oval-full-blue {
+    background-image: url('cards/oval1_full_blue.svg');
+}
+
+.card-double-oval-empty-blue {
+    background-image: url('cards/oval2_blue.svg');
+}
+
+.card-double-oval-dashed-blue {
+    background-image: url('cards/oval2_dashed_blue.svg');
+}
+
+.card-double-oval-full-blue {
+    background-image: url('cards/oval2_full_blue.svg');
+}
+
+.card-triple-oval-empty-blue {
+    background-image: url('cards/oval3_blue.svg');
+}
+
+.card-triple-oval-dashed-blue {
+    background-image: url('cards/oval3_dashed_blue.svg');
+}
+
+.card-triple-oval-full-blue {
+    background-image: url('cards/oval3_full_blue.svg');
+}
+
+/* red diamonds */
+
+.card-single-diamond-empty-red {
+    background-image: url('cards/diamond1_red.svg');
+}
+
+.card-single-diamond-dashed-red {
+    background-image: url('cards/diamond1_dashed_red.svg');
+}
+
+.card-single-diamond-full-red {
+    background-image: url('cards/diamond1_full_red.svg');
+}
+
+.card-double-diamond-empty-red {
+    background-image: url('cards/diamond2_red.svg');
+}
+
+.card-double-diamond-dashed-red {
+    background-image: url('cards/diamond2_dashed_red.svg');
+}
+
+.card-double-diamond-full-red {
+    background-image: url('cards/diamond2_full_red.svg');
+}
+
+.card-triple-diamond-empty-red {
+    background-image: url('cards/diamond3_red.svg');
+}
+
+.card-triple-diamond-dashed-red {
+    background-image: url('cards/diamond3_dashed_red.svg');
+}
+
+.card-triple-diamond-full-red {
+    background-image: url('cards/diamond3_full_red.svg');
+}
+
+/* green diamonds */
+
+.card-single-diamond-empty-green {
+    background-image: url('cards/diamond1_green.svg');
+}
+
+.card-single-diamond-dashed-green {
+    background-image: url('cards/diamond1_dashed_green.svg');
+}
+
+.card-single-diamond-full-green {
+    background-image: url('cards/diamond1_full_green.svg');
+}
+
+.card-double-diamond-empty-green {
+    background-image: url('cards/diamond2_green.svg');
+}
+
+.card-double-diamond-dashed-green {
+    background-image: url('cards/diamond2_dashed_green.svg');
+}
+
+.card-double-diamond-full-green {
+    background-image: url('cards/diamond2_full_green.svg');
+}
+
+.card-triple-diamond-empty-green {
+    background-image: url('cards/diamond3_green.svg');
+}
+
+.card-triple-diamond-dashed-green {
+    background-image: url('cards/diamond3_dashed_green.svg');
+}
+
+.card-triple-diamond-full-green {
+    background-image: url('cards/diamond3_full_green.svg');
+}
+
+/* blue diamonds */
+
+.card-single-diamond-empty-blue {
+    background-image: url('cards/diamond1_blue.svg');
+}
+
+.card-single-diamond-dashed-blue {
+    background-image: url('cards/diamond1_dashed_blue.svg');
+}
+
+.card-single-diamond-full-blue {
+    background-image: url('cards/diamond1_full_blue.svg');
+}
+
+.card-double-diamond-empty-blue {
+    background-image: url('cards/diamond2_blue.svg');
+}
+
+.card-double-diamond-dashed-blue {
+    background-image: url('cards/diamond2_dashed_blue.svg');
+}
+
+.card-double-diamond-full-blue {
+    background-image: url('cards/diamond2_full_blue.svg');
+}
+
+.card-triple-diamond-empty-blue {
+    background-image: url('cards/diamond3_blue.svg');
+}
+
+.card-triple-diamond-dashed-blue {
+    background-image: url('cards/diamond3_dashed_blue.svg');
+}
+
+.card-triple-diamond-full-blue {
+    background-image: url('cards/diamond3_full_blue.svg');
+}
+

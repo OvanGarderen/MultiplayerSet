@@ -12,24 +12,24 @@ html, body {
     background-image: url('arches.png');
 }
 
-.middle-wrapper {
-    padding: 20px;
-
-    height: 100%;
-    width: 70%;
-    
-    margin: auto;
-    background-color: white;
-    box-shadow: 0 0 15px 3px rgb(195,185,185);
-}
-
-.gamearea {
-    display: flex;
-    flex-flow: column;
-}
-
 h1 {
     font-size: 30px;
+}
+
+.menu {
+    display: float;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+
+    min-width: 150px;
+    min-height: 50px;
+
+    padding: 20px;
+
+    background: white;
+    border-top-right-radius: 20px;
+    box-shadow: 4px 0 8px 2px rgb(215,215,215);
 }
 
 button {
@@ -39,23 +39,70 @@ button {
     transition-duration: 0.2s;
 }
 
+.join-button {
+    width: 100%;
+
+    color: white;
+    text-shadow: 1px 1px #915228;
+
+    border-radius: 8px;
+    background-color: #ed7e36;
+}
+
 button:hover {
     filter: invert(10%);
 }
 
+input {
+    padding-left: 5px;
+    padding-right: 5px;
+
+    outline: none;
+    border: none;
+    border-bottom: solid;
+    border-width: 1pt;
+    background: white;
+}
+
+input:hover {
+    filter: invert(10%);
+}
+
+tbody {
+    width: 100%;
+}
+
+.middle-wrapper {
+    padding-left: 20px;
+    padding-right: 20px;
+
+    height: 100%;
+    width: 60%;
+    
+    margin: auto;
+    background-color: white;
+    box-shadow: 0 0 15px 3px rgb(195,185,185);
+
+    display: flex;
+    flex-flow: column;
+}
 
 .internal-box {
     border-left: solid;
 
-    padding-left: 15px;
+    padding: 15px;
     padding-top: 7px;
     padding-bottom: 7px;
 
     margin-top: 10px;
+    margin-bottom: 10px;
+
+    box-shadow: 4px 0 8px 2px rgb(215,215,215);
 }
 
 .playarea {
     margin-top: 10px;
+    margin-bottom: 10px;
 
     padding-top: 10px;
     padding-bottom: 10px;
@@ -68,11 +115,16 @@ button:hover {
 
 #players {
     display: flex;
-    flex-flow: row;    
+    flex-flow: row;
 }
 
-.playerinfo {   
+.playerinfo {
+    margin: auto;
     font-size: 25px;
+}
+
+.blocked {
+    background: rgba(255,0,0,0.2);
 }
 
 #infobox {
@@ -84,34 +136,34 @@ button:hover {
     padding: 15px;
 }
 
-.card {
-    background-image: url("deck2.png");
-
-    width: 188px; 
-    height: 100px;
-    background-position: 0px 0px; 
-
-    /* scaled up twice */
-    background-size: 1746px 972px;
-
-    margin: 4px;
-
-    box-shadow: 2px 2px 5px 3px rgb(105,85,85);
-}
-
-.card:hover {
-    filter: invert(10%);
-}
-
-.card.marked {
-    filter: invert(30%);
-}
-
-.card.marked:hover {
-    filter: invert(20%);
-}
-
 #cards {
     margin: 20px;
+}
+
+.flexybox {
+    flex: auto;
+    padding-top: 3%;
+}
+
+.loginbutton {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 40%;
+
+}
+
+#room-table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th {
+    text-align: left;
+    padding-right: 5pt;
+}
+
+.top-row {
+    border-bottom: 1px solid;
 }
 

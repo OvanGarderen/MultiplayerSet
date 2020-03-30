@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="UTF-8">
+
+  <title>Multiplayer Set</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Alegreya&display=swap" rel="stylesheet">
+  
+  <!-- javascript libraries used across the site -->
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/js-sha512/0.8.0/sha512.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js"></script>
+
+  <!-- stylesheets -->
+  <link rel="stylesheet" href="static/stylesheet.css">
+  <link rel="stylesheet" href="static/cards.css">
+
+  <script>
+    $(function() {
+	var username = Cookies.get('username');
+	if (!!username)
+	    $('.menu').html("Logged in as " + decodeURIComponent(username) + ".");
+	else
+	    $('.menu').html("You are not logged in!");
+    });
+  </script>
+
+  <!-- page specific scripts -->
+  {% block scripts %}
+  {% endblock %}
+</head>
+<body>
+  <div class="menu"></div>
+
+  <div class="middle-wrapper">
+      {% if title %}
+      <h1 class="internal-box">{{title}}</h1>
+      {% else %}
+      <h1 class="internal-box">Multiplayer Set</h1>
+      {% endif %}
+      
+      {% block content %}
+      {% endblock %}
+  </div>
+</body>

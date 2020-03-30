@@ -2,7 +2,7 @@
 import eventlet
 import logging
 import os
-from flask import Flask, render_template, jsonify, request
+from flask import Flask, render_template, jsonify, request, make_response
 from flask_socketio import SocketIO, join_room, leave_room, send, emit
 
 from Users import User
@@ -14,15 +14,33 @@ app.secret_key = os.getenv("SECRET_KEY", "")
 
 ROOMS = {}
 
+############### page routing ################
+
+@app.route('/')
+def index():
+    return render_template('index.html', title='Multiplayer Set')
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    print(request.form);
+    if request.method == 'GET':
+        return render_template('login.html', title='Login')
+    else:
+        resp = make_response(render_template('login_submit.html', username=request.form["uname"]))
+        resp.set_cookie('username', request.form["uname"])
+        resp.set_cookie('pwhash', request.form["pwd"])
+        return resp
+
+@app.route('/testgame')
+def testgame():
+    return render_template('testgame.html', title='Multiplayer Room: %s' % testgame.name)
+
+
 # debug game
 testuser = User('testuser','test')
 testgame = Game('__testgame', 1)
 testgame.add_player(testuser)
 ROOMS[testgame.game_id] = testgame;
-
-@app.route('/testgame')
-def testcard():
-    return render_template('testgame.html')
 
 @socketio.on('testdraw')
 def testdraw():
@@ -41,10 +59,6 @@ def request_room_update():
 
 
 # real logic
-@app.route('/')
-def index():
-    return render_template('index.html')
-
 @app.route('/stats')
 def stats():
     """display room stats"""
@@ -83,11 +97,11 @@ def want_update_rooms():
 def on_join(data): 
     user = User(data['username'],data['pwhash'])
 
-    room = data['room']
+    room = testgame.game_id; #data['room']
     
     if room in ROOMS:
         # add player
-        rooms[room].add_player(user)
+        ROOMS[room].add_player(user)
 
         # rebroadcast game object
         join_room(room)
